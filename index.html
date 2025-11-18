@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #007bff; /* Changed to blue */
+            --secondary: #f1faee;
+            --accent: #a8dadc;
+            --dark: #1d3557;
+            --light: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: none;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-outline-primary {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--dark);
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+        }
+        
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .heart-icon {
+            color: var(--primary);
+        }
+        
+        .sidebar {
+            background-color: var(--dark);
+            color: white;
+            min-height: 100vh;
+            padding-top: 20px;
+        }
+        
+        .sidebar .nav-link {
+            color: white;
+            padding: 10px 20px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: var(--primary);
+        }
+        
+        .content-area {
+            padding: 20px;
+        }
+        
+        .prediction-result {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .low-risk {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .high-risk {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .data-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+        }
+        
+        .homepage-hero {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .homepage-image {
+            max-width: 300px;
+            margin: 20px auto;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        
+        .homepage-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+        
+        .guest-mode-btn {
+            background-color: #6c757d;
+            border: none;
+            color: white;
+        }
+        
+        .guest-mode-btn:hover {
+            background-color: #5a6268;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Page -->
+    <div id="homePage" class="container-fluid">
+        <div class="homepage-hero">
+            <div class="container">
+                <h1><i class="fas fa-heartbeat heart-icon"></i> Heart Disease Prediction System</h1>
+                <p class="lead">Advanced AI-powered heart disease risk assessment</p>
+                
+                <!-- Placeholder for heart image -->
+               <!-- Heart Health Image -->
+<div class="homepage-image">
+    <img src="https://onu65v95kt.ufs.sh/f/4R8xh8GuA59KmL1pJqvM1t2QfwS9YyUT3P0FxAVRBK8G5jWg" alt="Heart Health" style="width: 100%; height: auto; border-radius: 15px;">
+</div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-4 mb-3">
+                        <button id="patientLoginBtn" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-user me-2"></i>Patient Login
+                        </button>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button id="doctorLoginBtn" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-user-md me-2"></i>Doctor Login
+                        </button>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button id="guestModeBtn" class="btn guest-mode-btn btn-lg w-100">
+                            <i class="fas fa-user-clock me-2"></i>Continue as Guest
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container text-center py-5">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <i class="fas fa-brain feature-icon"></i>
+                    <h4>AI-Powered Analysis</h4>
+                    <p>Advanced machine learning algorithms for accurate heart disease prediction</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <h4>Secure & Private</h4>
+                    <p>Your health data is protected with enterprise-grade security</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <i class="fas fa-clock feature-icon"></i>
+                    <h4>Instant Results</h4>
+                    <p>Get your heart disease risk assessment in seconds</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="container d-none">
+        <div class="login-container card">
+            <div class="card-body text-center">
+                <button id="backToHome" class="btn btn-outline-secondary mb-3 align-self-start">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Home
+                </button>
+                <h1 class="mb-4"><i class="fas fa-heartbeat heart-icon"></i> Heart Disease Prediction</h1>
+                <p class="text-muted mb-4" id="loginTypeText">Select your login type</p>
+                
+                <ul class="nav nav-tabs nav-justified mb-4" id="loginTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="patient-tab" data-bs-toggle="tab" data-bs-target="#patient" type="button" role="tab">Patient Login</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="doctor-tab" data-bs-toggle="tab" data-bs-target="#doctor" type="button" role="tab">Doctor Login</button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="loginTabsContent">
+                    <!-- Patient Login -->
+                    <div class="tab-pane fade" id="patient" role="tabpanel">
+                        <form id="patientLoginForm">
+                            <div class="mb-3">
+                                <label for="patientUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="patientUsername">
+                            </div>
+                            <div class="mb-3">
+                                <label for="patientPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="patientPassword">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Login as Patient</button>
+                            <button type="button" id="patientRegisterBtn" class="btn btn-outline-primary w-100">Register as Patient</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Doctor Login -->
+                    <div class="tab-pane fade show active" id="doctor" role="tabpanel">
+                        <form id="doctorLoginForm">
+                            <div class="mb-3">
+                                <label for="doctorUsername" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="doctorUsername" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="doctorPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="doctorPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Login as Doctor</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="container-fluid d-none">
+        <!-- ... (admin dashboard code remains exactly the same) ... -->
+    </div>
+
+    <!-- User Dashboard -->
+    <div id="userDashboard" class="container d-none">
+        <div class="dashboard-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-heartbeat heart-icon"></i> Heart Disease Prediction</h1>
+                <div>
+                    <span id="userWelcome" class="me-3">Welcome, User!</span>
+                    <button id="userLogout" class="btn btn-outline-primary"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="card-title">Check Your Heart Health</h3>
+                            <p class="card-text">Fill out the form below to assess your risk of heart disease.</p>
+                            
+                            <form id="predictionForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="userBMI" class="form-label">BMI</label>
+                                            <input type="number" step="0.1" class="form-control" id="userBMI" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userSmoking" class="form-label">Smoking</label>
+                                            <select class="form-control" id="userSmoking" required>
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userAlcohol" class="form-label">Alcohol Drinking</label>
+                                            <select class="form-control" id="userAlcohol" required>
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userStroke" class="form-label">Stroke History</label>
+                                            <select class="form-control" id="userStroke" required>
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userPhysicalHealth" class="form-label">Physical Health (days in last 30)</label>
+                                            <input type="number" class="form-control" id="userPhysicalHealth" min="0" max="30" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userMentalHealth" class="form-label">Mental Health (days in last 30)</label>
+                                            <input type="number" class="form-control" id="userMentalHealth" min="0" max="30" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="userDiffWalking" class="form-label">Difficulty Walking</label>
+                                            <select class="form-control" id="userDiffWalking" required>
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userSex" class="form-label">Sex</label>
+                                            <select class="form-control" id="userSex" required>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userAge" class="form-label">Age</label>
+                                            <input type="number" class="form-control" id="userAge" min="1" max="120" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userPhysicalActivity" class="form-label">Physical Activity</label>
+                                            <select class="form-control" id="userPhysicalActivity" required>
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userGenHealth" class="form-label">General Health</label>
+                                            <select class="form-control" id="userGenHealth" required>
+                                                <option value="Excellent">Excellent</option>
+                                                <option value="Very good">Very good</option>
+                                                <option value="Good">Good</option>
+                                                <option value="Fair">Fair</option>
+                                                <option value="Poor">Poor</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userSleepTime" class="form-label">Sleep Time (hours)</label>
+                                            <input type="number" class="form-control" id="userSleepTime" min="0" max="24" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="mt-3">Additional Health Information</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="userAsthma" class="form-label">Asthma</label>
+                                            <select class="form-control" id="userAsthma" required>
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userKidneyDisease" class="form-label">Kidney Disease</label>
+                                            <select class="form-control" id="userKidneyDisease" required>
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userSkinCancer" class="form-label">Skin Cancer</label>
+                                            <select class="form-control" id="userSkinCancer" required>
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="userRace" class="form-label">Race</label>
+                                            <select class="form-control" id="userRace" required>
+                                                <option value="">Select Race</option>
+                                                <option value="White">White</option>
+                                                <option value="Black">Black</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="userDiabetic" class="form-label">Diabetic</label>
+                                            <select class="form-control" id="userDiabetic" required>
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                                <option value="During pregnancy">During pregnancy</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Heart Photo Upload Section (Only for registered patients) -->
+                                <div id="heartPhotoSection" class="mt-4 d-none">
+                                    <h5>Heart Health Imaging</h5>
+                                    <div class="mb-3">
+                                        <label for="heartPhoto" class="form-label">Upload Heart Photo/Scan</label>
+                                        <input type="file" class="form-control" id="heartPhoto" accept="image/*">
+                                        <div class="form-text">Upload an image of your heart scan (optional for better assessment)</div>
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">Check Heart Health</button>
+                            </form>
+                            
+                            <div id="predictionResult" class="prediction-result d-none">
+                                <!-- Prediction result will be shown here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            <i class="fas fa-heart feature-icon"></i>
+                            <h5 class="card-title">Heart Health Tips</h5>
+                            <p class="card-text">Maintain a healthy lifestyle to reduce your risk of heart disease.</p>
+                            <ul class="text-start">
+                                <li>Eat a balanced diet</li>
+                                <li>Exercise regularly</li>
+                                <li>Avoid smoking</li>
+                                <li>Limit alcohol consumption</li>
+                                <li>Manage stress</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-stethoscope feature-icon"></i>
+                            <h5 class="card-title">Consult a Doctor</h5>
+                            <p class="card-text">If you have concerns about your heart health, consult with a healthcare professional.</p>
+                            <button class="btn btn-outline-primary">Find a Doctor</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Registration Modal -->
+    <div class="modal fade" id="patientRegistrationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Patient Registration</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="patientRegistrationForm">
+                        <div class="mb-3">
+                            <label for="patientRegUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="patientRegUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="patientRegEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="patientRegEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="patientRegPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="patientRegPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="patientRegConfirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="patientRegConfirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Register as Patient</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctor Registration Modal -->
+    <div class="modal fade" id="doctorRegistrationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Doctor Registration</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="doctorRegistrationForm">
+                        <div class="mb-3">
+                            <label for="doctorRegUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="doctorRegUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="doctorRegEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="doctorRegEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="doctorRegPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="doctorRegPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="doctorRegConfirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="doctorRegConfirmPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="doctorRegSpecialization" class="form-label">Specialization</label>
+                            <input type="text" class="form-control" id="doctorRegSpecialization" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="doctorRegLicense" class="form-label">Medical License Number</label>
+                            <input type="text" class="form-control" id="doctorRegLicense" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Register as Doctor</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Data storage
+        let doctors = [];
+        let trainingData = [];
+        let patients = [
+            { id: 1, username: 'patient1', email: 'patient1@example.com', regDate: '2023-01-15', lastLogin: '2023-10-20' },
+            { id: 2, username: 'patient2', email: 'patient2@example.com', regDate: '2023-02-20', lastLogin: '2023-10-18' }
+        ];
+        let registeredDoctors = [
+            { id: 1, username: 'doctor1', email: 'doctor1@example.com', specialization: 'Cardiology', license: 'MD12345' }
+        ];
+        let feedback = [
+            { id: 1, user: 'patient1', message: 'Great tool! Helped me understand my risk factors.', date: '2023-09-15' },
+            { id: 2, user: 'patient2', message: 'The prediction was accurate based on my medical history.', date: '2023-10-05' }
+        ];
+
+        // DOM Elements
+        const homePage = document.getElementById('homePage');
+        const loginPage = document.getElementById('loginPage');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const userDashboard = document.getElementById('userDashboard');
+        const patientLoginForm = document.getElementById('patientLoginForm');
+        const doctorLoginForm = document.getElementById('doctorLoginForm');
+        const patientRegistrationModal = new bootstrap.Modal(document.getElementById('patientRegistrationModal'));
+        const doctorRegistrationModal = new bootstrap.Modal(document.getElementById('doctorRegistrationModal'));
+        const patientRegistrationForm = document.getElementById('patientRegistrationForm');
+        const doctorRegistrationForm = document.getElementById('doctorRegistrationForm');
+        const patientRegisterBtn = document.getElementById('patientRegisterBtn');
+        const adminLogout = document.getElementById('adminLogout');
+        const userLogout = document.getElementById('userLogout');
+        const addDoctorForm = document.getElementById('addDoctorForm');
+        const addTrainingDataForm = document.getElementById('addTrainingDataForm');
+        const predictionForm = document.getElementById('predictionForm');
+        const predictionResult = document.getElementById('predictionResult');
+        const heartPhotoSection = document.getElementById('heartPhotoSection');
+        const userWelcome = document.getElementById('userWelcome');
+        
+        // Home page buttons
+        const patientLoginBtn = document.getElementById('patientLoginBtn');
+        const doctorLoginBtn = document.getElementById('doctorLoginBtn');
+        const guestModeBtn = document.getElementById('guestModeBtn');
+        const backToHome = document.getElementById('backToHome');
+        
+        // Login tabs
+        const patientTab = document.getElementById('patient-tab');
+        const doctorTab = document.getElementById('doctor-tab');
+        const loginTypeText = document.getElementById('loginTypeText');
+
+        // Sidebar navigation
+        const sidebarLinks = document.querySelectorAll('.sidebar .nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        // Current user state
+        let currentUser = null;
+        let isGuest = false;
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Home page navigation
+            patientLoginBtn.addEventListener('click', function() {
+                homePage.classList.add('d-none');
+                loginPage.classList.remove('d-none');
+                patientTab.click();
+                loginTypeText.textContent = 'Patient Login';
+            });
+            
+            doctorLoginBtn.addEventListener('click', function() {
+                homePage.classList.add('d-none');
+                loginPage.classList.remove('d-none');
+                doctorTab.click();
+                loginTypeText.textContent = 'Doctor Login';
+            });
+            
+            guestModeBtn.addEventListener('click', function() {
+                homePage.classList.add('d-none');
+                userDashboard.classList.remove('d-none');
+                isGuest = true;
+                currentUser = { username: 'Guest' };
+                userWelcome.textContent = 'Welcome, Guest!';
+                heartPhotoSection.classList.add('d-none');
+            });
+            
+            backToHome.addEventListener('click', function() {
+                loginPage.classList.add('d-none');
+                homePage.classList.remove('d-none');
+            });
+            
+            // Patient login
+            patientLoginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('patientUsername').value;
+                const password = document.getElementById('patientPassword').value;
+                
+                // Simple patient validation
+                if (username && password) {
+                    const patient = patients.find(p => p.username === username);
+                    if (patient || (username && password)) {
+                        loginPage.classList.add('d-none');
+                        userDashboard.classList.remove('d-none');
+                        isGuest = false;
+                        currentUser = patient || { username: username };
+                        userWelcome.textContent = `Welcome, ${currentUser.username}!`;
+                        heartPhotoSection.classList.remove('d-none');
+                    } else {
+                        alert('Invalid patient credentials!');
+                    }
+                } else {
+                    // Allow empty login for guest access to form
+                    loginPage.classList.add('d-none');
+                    userDashboard.classList.remove('d-none');
+                    isGuest = true;
+                    currentUser = { username: 'Guest' };
+                    userWelcome.textContent = 'Welcome, Guest!';
+                    heartPhotoSection.classList.add('d-none');
+                }
+            });
+            
+            // Doctor login
+            doctorLoginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('doctorUsername').value;
+                const password = document.getElementById('doctorPassword').value;
+                
+                if (username === 'Salma' && password === '2005') {
+                    loginPage.classList.add('d-none');
+                    adminDashboard.classList.remove('d-none');
+                    showSection('addDoctor');
+                } else {
+                    // Check registered doctors
+                    const doctor = registeredDoctors.find(d => d.username === username);
+                    if (doctor && password) {
+                        loginPage.classList.add('d-none');
+                        adminDashboard.classList.remove('d-none');
+                        showSection('addDoctor');
+                    } else {
+                        alert('Invalid doctor credentials!');
+                    }
+                }
+            });
+            
+            // Patient Registration
+            patientRegisterBtn.addEventListener('click', function() {
+                patientRegistrationModal.show();
+            });
+            
+            patientRegistrationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('patientRegUsername').value;
+                const email = document.getElementById('patientRegEmail').value;
+                const password = document.getElementById('patientRegPassword').value;
+                const confirmPassword = document.getElementById('patientRegConfirmPassword').value;
+                
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+                
+                // Add patient to patients array
+                const newPatient = {
+                    id: patients.length + 1,
+                    username: username,
+                    email: email,
+                    regDate: new Date().toISOString().split('T')[0],
+                    lastLogin: new Date().toISOString().split('T')[0]
+                };
+                
+                patients.push(newPatient);
+                alert('Patient registration successful! You can now login.');
+                patientRegistrationModal.hide();
+                patientRegistrationForm.reset();
+                
+                // Switch to patient login tab
+                patientTab.click();
+            });
+            
+            // Doctor Registration (from admin dashboard)
+            // This would be triggered from the admin panel
+            
+            // Logout
+            adminLogout.addEventListener('click', function() {
+                adminDashboard.classList.add('d-none');
+                homePage.classList.remove('d-none');
+                doctorLoginForm.reset();
+            });
+            
+            userLogout.addEventListener('click', function() {
+                userDashboard.classList.add('d-none');
+                homePage.classList.remove('d-none');
+                patientLoginForm.reset();
+                predictionResult.classList.add('d-none');
+                isGuest = false;
+                currentUser = null;
+            });
+            
+            // Sidebar navigation
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.getAttribute('data-section');
+                    
+                    // Update active state
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show selected section
+                    showSection(section);
+                });
+            });
+            
+            // Add Doctor
+            addDoctorForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const doctor = {
+                    id: document.getElementById('doctorId').value,
+                    address: document.getElementById('doctorAddress').value,
+                    mobile: document.getElementById('doctorMobile').value,
+                    email: document.getElementById('doctorEmail').value,
+                    age: document.getElementById('doctorAge').value,
+                    gender: document.getElementById('doctorGender').value,
+                    specialization: document.getElementById('doctorSpecialization').value
+                };
+                
+                doctors.push(doctor);
+                alert('Doctor added successfully!');
+                addDoctorForm.reset();
+                
+                // Update doctors table if it's currently visible
+                if (!document.getElementById('viewDoctors').classList.contains('d-none')) {
+                    populateDoctorsTable();
+                }
+            });
+            
+            // Add Training Data
+            addTrainingDataForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get race values
+                const raceValues = [];
+                if (document.getElementById('raceAsian').checked) raceValues.push('Asian');
+                if (document.getElementById('raceBlack').checked) raceValues.push('Black');
+                if (document.getElementById('raceHispanic').checked) raceValues.push('Hispanic');
+                if (document.getElementById('raceOther').checked) raceValues.push('Other');
+                if (document.getElementById('raceWhite').checked) raceValues.push('White');
+                
+                // Get diabetic values
+                const diabeticValues = [];
+                if (document.getElementById('diabeticNo').checked) diabeticValues.push('No');
+                if (document.getElementById('diabeticYes').checked) diabeticValues.push('Yes');
+                if (document.getElementById('diabeticPregnancy').checked) diabeticValues.push('During pregnancy');
+                
+                const data = {
+                    bmi: document.getElementById('bmi').value,
+                    smoking: document.getElementById('smoking').value,
+                    alcoholDrinking: document.getElementById('alcoholDrinking').value,
+                    stroke: document.getElementById('stroke').value,
+                    physicalHealth: document.getElementById('physicalHealth').value,
+                    mentalHealth: document.getElementById('mentalHealth').value,
+                    diffWalking: document.getElementById('diffWalking').value,
+                    sex: document.getElementById('sex').value,
+                    ageCategory: document.getElementById('ageCategory').value,
+                    physicalActivity: document.getElementById('physicalActivity').value,
+                    genHealth: document.getElementById('genHealth').value,
+                    sleepTime: document.getElementById('sleepTime').value,
+                    asthma: document.getElementById('asthma').value,
+                    kidneyDisease: document.getElementById('kidneyDisease').value,
+                    skinCancer: document.getElementById('skinCancer').value,
+                    race: raceValues.join(', '),
+                    diabetic: diabeticValues.join(', '),
+                    target: document.getElementById('target').value
+                };
+                
+                trainingData.push(data);
+                alert('Training data added successfully!');
+                addTrainingDataForm.reset();
+                
+                // Update training data table if it's currently visible
+                if (!document.getElementById('viewTrainingData').classList.contains('d-none')) {
+                    populateTrainingDataTable();
+                }
+            });
+            
+            // Heart Disease Prediction
+            predictionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Handle heart photo upload for registered patients
+                const heartPhotoInput = document.getElementById('heartPhoto');
+                if (!isGuest && heartPhotoInput.files.length > 0) {
+                    const file = heartPhotoInput.files[0];
+                    console.log('Heart photo uploaded:', file.name);
+                    // In a real application, you would upload this to a server
+                }
+                
+                // Simple prediction algorithm (in a real app, this would use a ML model)
+                const bmi = parseFloat(document.getElementById('userBMI').value);
+                const smoking = document.getElementById('userSmoking').value;
+                const alcohol = document.getElementById('userAlcohol').value;
+                const stroke = document.getElementById('userStroke').value;
+                const physicalHealth = parseInt(document.getElementById('userPhysicalHealth').value);
+                const mentalHealth = parseInt(document.getElementById('userMentalHealth').value);
+                const diffWalking = document.getElementById('userDiffWalking').value;
+                const age = parseInt(document.getElementById('userAge').value);
+                const physicalActivity = document.getElementById('userPhysicalActivity').value;
+                const genHealth = document.getElementById('userGenHealth').value;
+                
+                let riskScore = 0;
+                
+                // Calculate risk score based on factors
+                if (bmi > 30) riskScore += 2;
+                if (smoking === 'Yes') riskScore += 3;
+                if (alcohol === 'Yes') riskScore += 1;
+                if (stroke === 'Yes') riskScore += 4;
+                if (physicalHealth > 10) riskScore += 2;
+                if (mentalHealth > 10) riskScore += 1;
+                if (diffWalking === 'Yes') riskScore += 2;
+                if (age >= 55) riskScore += 3;
+                if (physicalActivity === 'No') riskScore += 2;
+                if (genHealth === 'Fair' || genHealth === 'Poor') riskScore += 2;
+                
+                // Determine risk level
+                let riskLevel, message, recommendations;
+                if (riskScore < 5) {
+                    riskLevel = 'Low Risk';
+                    message = 'Based on the information provided, you have a low risk of heart disease.';
+                    recommendations = 'Continue maintaining a healthy lifestyle with regular exercise and a balanced diet.';
+                    predictionResult.className = 'prediction-result low-risk';
+                } else if (riskScore < 10) {
+                    riskLevel = 'Moderate Risk';
+                    message = 'Based on the information provided, you have a moderate risk of heart disease.';
+                    recommendations = 'Consider consulting with a healthcare provider and making lifestyle changes to reduce your risk factors.';
+                    predictionResult.className = 'prediction-result';
+                } else {
+                    riskLevel = 'High Risk';
+                    message = 'Based on the information provided, you have a high risk of heart disease.';
+                    recommendations = 'We strongly recommend consulting with a healthcare provider for a comprehensive evaluation and personalized advice.';
+                    predictionResult.className = 'prediction-result high-risk';
+                }
+                
+                // Display result
+                predictionResult.innerHTML = `
+                    <h4>Heart Disease Risk Assessment</h4>
+                    <h3>${riskLevel}</h3>
+                    <p>${message}</p>
+                    <p><strong>Recommendations:</strong> ${recommendations}</p>
+                    ${!isGuest ? '<p><strong>Note:</strong> Your heart photo has been received and will be reviewed by our specialists.</p>' : ''}
+                    <p><em>Note: This is a preliminary assessment and not a medical diagnosis. Please consult with a healthcare professional for accurate evaluation.</em></p>
+                `;
+                predictionResult.classList.remove('d-none');
+            });
+        });
+        
+        // Helper Functions
+        function showSection(sectionId) {
+            contentSections.forEach(section => {
+                section.classList.add('d-none');
+            });
+            document.getElementById(sectionId).classList.remove('d-none');
+            
+            // Populate data if needed
+            if (sectionId === 'viewUsers') {
+                populateUsersTable();
+            } else if (sectionId === 'viewDoctors') {
+                populateDoctorsTable();
+            } else if (sectionId === 'viewTrainingData') {
+                populateTrainingDataTable();
+            } else if (sectionId === 'viewFeedback') {
+                populateFeedback();
+            }
+        }
+        
+        function populateUsersTable() {
+            const tableBody = document.getElementById('usersTableBody');
+            tableBody.innerHTML = '';
+            
+            patients.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${user.regDate}</td>
+                    <td>${user.lastLogin}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function populateDoctorsTable() {
+            const tableBody = document.getElementById('doctorsTableBody');
+            tableBody.innerHTML = '';
+            
+            doctors.forEach(doctor => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${doctor.id}</td>
+                    <td>${doctor.specialization}</td>
+                    <td>${doctor.email}</td>
+                    <td>${doctor.mobile}</td>
+                    <td>${doctor.age}</td>
+                    <td>${doctor.gender}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function populateTrainingDataTable() {
+            const tableBody = document.getElementById('trainingDataTableBody');
+            tableBody.innerHTML = '';
+            
+            trainingData.forEach(data => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${data.bmi}</td>
+                    <td>${data.smoking}</td>
+                    <td>${data.alcoholDrinking}</td>
+                    <td>${data.stroke}</td>
+                    <td>${data.physicalHealth}</td>
+                    <td>${data.mentalHealth}</td>
+                    <td>${data.diffWalking}</td>
+                    <td>${data.sex}</td>
+                    <td>${data.ageCategory}</td>
+                    <td>${data.target === '1' ? 'Yes' : 'No'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function populateFeedback() {
+            const feedbackList = document.getElementById('feedbackList');
+            feedbackList.innerHTML = '';
+            
+            if (feedback.length === 0) {
+                feedbackList.innerHTML = '<p>No feedback available.</p>';
+                return;
+            }
+            
+            feedback.forEach(item => {
+                const feedbackItem = document.createElement('div');
+                feedbackItem.className = 'card mb-3';
+                feedbackItem.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${item.user}</h5>
+                        <p class="card-text">${item.message}</p>
+                        <p class="card-text"><small class="text-muted">${item.date}</small></p>
+                    </div>
+                `;
+                feedbackList.appendChild(feedbackItem);
+            });
+        }
+    </script>
+</body>
+</html>
